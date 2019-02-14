@@ -1,0 +1,801 @@
+%%%%%Präambel%%%%%
+
+\documentclass[12pt,a4paper]{article}%Schriftgröße, Papierformat einstellen
+%\documentclass{scrbook}
+\usepackage[top=30mm,bottom=30mm]{geometry}
+\usepackage{lipsum}
+%Pakete laden zur deutschen Rechtschreibung und für Umlaute
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc} %für Windows, Linux
+%\usepackage[applemac]{inputenc} %für Mac
+%\usepackage{xcolor}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{cancel}
+\usepackage{titlesec}
+\usepackage{cite}
+\usepackage{filecontents}
+\usepackage{tabularx}
+\usepackage{harvard}
+\usepackage{units}
+\usepackage{longtable} 
+\usepackage{chngcntr}
+\usepackage{stmaryrd}
+\usepackage{array}
+\let\harvardleftorig\harvardleft
+%\usepackage[round]{natbib}
+%\usepackage{hyperref}
+\usepackage[nottoc,numbib]{tocbibind}
+
+%Pakete laden zu mathematischen Symbolen etc.
+\usepackage{calc} 
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{scrpage2}
+\pagestyle{scrheadings}
+\clearscrheadfoot
+\automark[chapter]{section}
+\ofoot{\pagemark}
+\ifoot{Florian Leuze}
+\chead{\headmark}
+\setfootsepline{1pt}
+\setheadsepline{1pt}
+%\setheadsepline[\textwidth+20pt]{0.5pt}
+
+%Inhaltsverzeichnis mit Links erstellen
+\usepackage[colorlinks,
+pdfpagelabels,
+pdfstartview = FitH,
+bookmarksopen = true,
+bookmarksnumbered = true,
+linkcolor = black,
+plainpages = false,
+hypertexnames = false,
+citecolor = black] {hyperref}
+
+% Umgebungen für Definitionen, Sätze, usw.
+\newtheorem{satz}{Satz}[section]
+\newtheorem{definition}[satz]{Definition}     
+\newtheorem{lemma}[satz]{Lemma}	
+% Es werden Sätze, Definitionen etc innerhalb einer Section mit
+% 1.1, 1.2 etc durchnummeriert, ebenso die Gleichungen mit (1.1), (1.2) ..                  
+\numberwithin{equation}{section}
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+%neue Befehle definieren
+\newcommand{\R}{\mathbb{R}} %zB \R als Abkürzung für das Symbol der reellen Zahlen
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+
+\newcommand{\subsubsubsection}{\paragraph}
+\newcommand\citevgl
+{\def\harvardleft{(vgl.\ \global\let\harvardleft\harvardleftorig}%
+ \cite
+}
+\newcommand\citeVgl
+{\def\harvardleft{(Vgl.\ \global\let\harvardleft\harvardleftorig}%
+ \cite
+}
+
+\newcolumntype{L}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+%Makros
+%Makro Color
+%#1 Text
+\def\colBord#1{\begingroup\color{Fuchsia}{#1}\endgroup}
+\def\colRed#1{\begingroup\color{Red}{#1}\endgroup}
+\def\colGreen#1{\begingroup\color{LimeGreen}{#1}\endgroup}
+\def\colBlue#1{\begingroup\color{NavyBlue}{#1}\endgroup}
+
+\def\usGreen#1#2{\underset{\colGreen{#1}}{#2}}
+\def\usBord#1#2{\underset{\colBord{#1}}{#2}}
+
+\def\ubGreen#1#2{\underbrace{#2}_{\colGreen{#1}}}
+
+\def\defF{\textbf{Def.: }}
+
+\def\vecT#1{\left(\begin{array}{c} #1 \end{array}\right)}
+\def\dddot{\cdot \\ \cdot \\ \cdot}
+\def\vecD#1{\vecT{#1_1 \\ \dddot \\ #1_d}}
+\def\epsF{\pmb{\varepsilon}}
+
+\def\multiTwo#1#2{\multicolumn{2}{>{\hsize=\dimexpr2\hsize+2\tabcolsep+\arrayrulewidth\relax}#1}{#2}}
+\def\multiThree#1#2{\multicolumn{3}{>{\hsize=\dimexpr3\hsize+4\tabcolsep+2\arrayrulewidth\relax}#1}{#2}}
+
+\def\inR#1{\qquad ,\; #1 \in \R}
+\def\bracks#1{\left[ #1 \right]}
+\def\abs#1{\left| #1 \right|}
+\def\brac#1{\left( #1 \right)}
+
+%laziness
+\def\fermi{Fermi-Dirac-Verteilung}
+
+\newcolumntype{L}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+
+
+\def\formTab#1#2{
+\begin{equation}
+  \begin{tabularx}{12cm}{R{3cm} l l}
+    #1 &: &$#2$
+  \end{tabularx}
+\end{equation}
+}
+\newcommand{\formTabL}[3]{
+\begin{equation}
+  \begin{tabularx}{12cm}{R{3cm} l l}
+    #1 &: &$#2$ 
+  \end{tabularx}
+  \label{eq:#3}
+\end{equation}}
+\def\formTn{$ \\ $\;$ & $\;$ & $}
+\def\formTnQ{$ \\ $\;$ & $\;$ & $\qquad}
+\def\formTnQQ{$ \\ $\;$ & $\;$ & $\qquad \qquad}
+\def\formTnQQQ{$ \\ $\;$ & $\;$ & $\qquad \qquad \qquad}
+
+\renewcommand{\theequation}{\arabic{section}.\arabic{subsection}
+.\arabic{equation}}
+%Setzt den equation-Zaehler nach jeder Seite zurueck
+\numberwithin{equation}{subsection}	
+
+
+%\setlength\abovedisplayskip{0pt}
+
+% Auf der Seite http://detexify.kirelabs.org/classify.html können Sie mathematische Symbole, Pfeile usw per Maus eingeben und bekommen den Latex-Befehl dafür angezeigt.
+% detexify gibt es auch als App...
+
+%jetzt beginnt das eigentliche Dokument
+\begin{document}
+
+\bibliographystyle{agsm}
+
+\author{}
+\title{\underline{Mikroelektronik Formelsammlung} \\ $\;$ \\ $\;$ \\ Florian Leuze}
+\date{}
+
+\maketitle % erzeugt den Kopf
+\newpage
+\section{\underline{Inhalt}}
+\tableofcontents
+
+  \subsection{Versionierung}
+  \begin{tabular}{|p{2cm}|p{1cm}|p{1.5cm}|p{8.5cm}|}\hline
+    Datum & Vers. & Kürzel & Änderung \\ \hline
+    04.05.2018 & 0.1 & FL & Erzeugung Dokument; Erzeugung Inhaltsverzeichnis; Erzeugung Versionierung; Erzeugung Leitf. u. Energieb.\\ \hline
+    05.05.2018 & 0.1 & FL & Korrektur formTabL \\ \hline
+    06.05.2018 & 0.1 & FL & Erzeugung Elek. u. Löch. in Halbl.; Erzeugung Abk; Donatoren u. Akzeptoren; Eff. Massen; Bandl.; Eckd.; u. Konst. \\ \hline
+    12.05.2018 & 1.0 & FL & Komplette Neustrukturierung; Fertigstellung Inhalt\\ \hline
+  \end{tabular}
+  
+  
+\newpage
+\section{Mikroelektronik I}
+Im Folgenden sei U = V.
+  \subsection{Leitfähigkeit und Energiebänder}
+  \subsubsection{Spezifischer Widerstand}
+  \formTabL{Ohmsches Gesetz}{V = RI \bracks{V}}{ohms_law_V}
+  \formTabL{Widerstand}{R = \frac{ V}{I} \bracks{\Omega}}{ohms_law_R}
+  \formTabL{Leitwert}{G = \frac{1}{G} = \frac{I}{V} \bracks{\frac{1}{\Omega} = S}}{leitwert}
+  \formTabL{Spezifischer Widerstand}{R = \rho \frac{L}{A} \bracks{\Omega}}{spezR}
+  \formTabL{Leitfähigkeit(a)}{\sigma \frac{A}{L}\bracks{S}}{leitf_a}
+  \formTabL{Leitfähigkeit(b)}{\sigma = \frac{1}{\rho}}{leitf_b}
+  
+  \subsubsection{Energiebänder}
+  \formTabL{Wellenlänge}{\frac{ch}{E} = \frac{c}{\nu} = \frac{c}{f}}{test}
+  Mit $h$ als Planksches Wirkungsquantum, $c$ als Lichtgeschwindigkeit (siehe \ref{ch:constants}) und $\nu$ hier als Frequenz (siehe \ref{ch:names}).
+  \formTab{Photoneneergie}{\frac{1,240}{\lambda\bracks{\mu m}} = \frac{hc}{\lambda} \bracks{eV}}
+  $h$ ist hier in $eV$ einzusetzen.
+  \formTab{Ionisierungsenergie der i-ten Schale}{E_i = -\frac{m_0 q^4}{8\varepsilon_0^2 h^2 i^2} \thicksim \frac{m_0}{\left(\varepsilon_0 \right)^2}}
+  Gegebenenfalls muss $m_0$ mit der effektiven Masse multipliziert werden.
+  \formTab{Radien der Energieniveaus}{r_i = \frac{\varepsilon_0 i^2 h^2}{q^2 \pi m_0}}
+  \formTabL{Aufzubringende Energie}{E_f = |E_i - E_j| = \left|\frac{m_0 q^4}{8 \varepsilon_0^2 h^2}\left(\frac{1}{j^2} - \frac{1}{i^2}\right)\right|}{LE_EN_AufzEnergie}
+  \formTab{Größengleichung zu \eqref{eq:LE_EN_AufzEnergie}}{E_f = \left| \frac{9,11kg(1,602As)^4}{8(8,885\frac{As}{Vm} 6,633s)^2} \cdot 10^{-15}\left(\frac{1}{j^2}  \frac{1}{i^2}\right)\right|} 
+
+  \subsubsection{Siliciumkristalle}
+  \formTabL{Atomdichte Silizium}{N_{Si} = \frac{Atomzahl}{Volumen} = \frac{n_{cell}}{a^3}}{atomdichte_si}
+  \formTab{Größenwert zu \eqref{eq:atomdichte_si}}{ =\frac{8}{(5,43\cdot 10^{-8}cm)^3} = 5,00 \cdot 10^{22} \frac{1}{cm^3}}
+  \formTab{Atomdichte Si Valenzelektr.}{N_{val} = 4N_{Si} = 2,00\cdot 10^{23} \frac{1}{cm^3}}
+  Im Folgenden sei $EZ$ eine Einheitszelle.
+  \formTab{Atomanzahl Einheitszelle Si}{n_{cell} = \frac{8\text{in Ecken}}{8EZ} + \frac{6\text{in Flächen}}{2EZ} + \frac{4 \text{im Volumen}}{1EZ}}
+
+\subsection{Elektronen und Löcher in Halbleitern}
+   \subsubsection{Energie}
+   Im Folgenden sei $E_c$ die Leitungsbandkante und $E_v$ die Valenzbandkante.
+   \formTab{$E = E_c$}{E_{pot} = E_c\;und\; E_{kin} = 0}
+   \formTab{$E > E_c$}{E_{pot} = E_c\;und\; E_{kin} = \frac{1}{2}m^*_nv^2}
+   \formTab{$E = E_v$}{E_{pot} = E_v\;und\; E_{kin} = 0}
+   \formTab{$E < E_c$}{E_{pot} = E_v\;und\; E_{kin} = \frac{1}{2}m^*_pv^2}
+   \formTab{Therm. Energie}{E_{th} = E_{kin} = \frac{1}{2}m_ov_{th}^2 \cdot 1.08 = \frac{3}{2}kT \bracks{J}}
+
+  \subsubsection{Elektrisches Feld}
+  \formTabL{El. Feld(a)}{\pmb{\varepsilon} = -\frac{d\varphi}{dx} = -\left(-\frac{1}{q} \frac{dE_{pot}}{dx}\right) = \frac{1}{q}\frac{dE_i}{dx}}{eFeld_a}
+  Mit $i$ als Platzhaler für $c$ oder $v$.
+  
+  \subsubsection{Differentielles Ohmsches Gesetz}
+  \formTab{El. Feld(b)}{\pmb{\varepsilon} = \frac{V}{l} \bracks{\frac{V}{cm}}}
+  \formTab{Stromdichte}{J = \frac{I}{A} \bracks{\frac{A}{cm^2}}}
+  Mit \eqref{eq:leitf_a} folgt:
+  \formTab{Leitfähigkeit(c)}{\sigma = G\frac{l}{A} = \frac{I\cdot l}{V\cdot A} = \frac{J}{\pmb{\varepsilon}}}
+  \formTab{Driftstromdichte}{J_{drift} = \sigma\pmb{\varepsilon} = \rho_e v_d = qnv_d}
+  Wobei $\rho_e$ die Ladungsdichte und $v_d$ die Driftgeschwindigkeit sind.
+  Damit folgt
+  \formTab{Leitfähigkeit(d)}{\sigma = qn\frac{v_d}{\varepsilon}}
+  \formTab{Beweglichkeit}{\mu = \frac{v_d}{\varepsilon} \bracks{\frac{cm^2}{Vs}}}
+  \formTab{Leitfähigkeit(f)}{\sigma = q\mu n}
+  
+  \subsubsection{Gesamtleitfähigkeit}
+  \formTab{Gesamtleitfähigkeit}{\sigma_{ges} = \sigma_n + \sigma_p = q\mu_n n + q\mu_p p}
+  
+  \subsubsection{Ladungsträgerkonzentration in den Bändern}
+  \formTabL{Zustandsdichte Leitungsband}{D_C(E) = \frac{\sqrt{2}}{\pi^2 \hbar^3}\left(m_n^*\right)^{\frac{3}{2}} \sqrt{E-E_c}}{zustandsd_a}
+  Die in \eqref{eq:zustandsd_a} formulierte Gleichung ist als Zustandsdichte pro Energieintervall zu verstehen.
+  \formTab{Größengleichung zu \eqref{eq:zustandsd_a}}{D_C(E) = 6,8 \cdot 10^{21}\left(\frac{m_n^*}{m_o}\right)^{\frac{3}{2}} $ \\ $\;$ & $\;$ & $\qquad \qquad \qquad \cdot \sqrt{(E-E_c)\bracks{eV}} \bracks{\frac{1}{eVcm^3}}}
+  \formTab{Größengleichung zu \eqref{eq:zustandsd_a} im Valenzband}{D_C(E) = 6,8 \cdot 10^{21}\left(\frac{m_p^*}{m_o}\right)^{\frac{3}{2}} $ \\ $\;$ & $\;$ & $\qquad \qquad \qquad \cdot \sqrt{(E_v-E)\bracks{eV}} \bracks{\frac{1}{eVcm^3}}}
+  \formTabL{Elektronenkonzentration}{n = \displaystyle \int\limits_{E_c}^{\infty} D_c(E)\cdot f(E) dE}{lad_konz_n}
+  \formTabL{Löcherkonzentration}{p = \displaystyle \int\limits_{-\infty}^{E_v}D_v(E)f_h(E)dE}{lad_konz_p}
+  mit $f(E)$ als Besetzungswahrscheinlichkeit.
+  
+  \subsubsection{Fermi-Dirac-Verteilung}
+  \renewcommand{\arraystretch}{4}
+  \formTabL{Fermi-Dirac-Verteilung(a)}{\displaystyle f(E) = \frac{1}{\displaystyle e^{\displaystyle \frac{E-E_F}{kT}}+1}}{fermi_a}
+  \renewcommand{\arraystretch}{1}
+  Mit $E_F$ als Fermi Energie.
+  \formTab{$E = E_F$}{f(E=E_F) = \frac{1}{2}}
+  \formTab{\fermi(b)}{f(E):=f_e(E)}
+  \formTab{\fermi(c)}{f_h(E) = 1 - f_e(E)}
+  \formTab{\fermi(d)}{f_h(E) + f_e(E) = 1}
+  
+  \subsubsubsection{Boltzmann-Näherung}
+  \formTab{Boltzmann-Näherung(a)}{f_{e,Boltz}(E) = e^{-\displaystyle \frac{E-E_F}{kT}}}
+  Die Boltzmann-Näherung ist nur für den Fall $E-E_f > 3kT$ zureichend genau.
+  \formTab{$E-E_F >> kT$}{f_h(E) = 1-f_e(E) \cong 1}
+  \formTab{$E_F - E >> kT$}{f_e(E) = \displaystyle \frac{1}{e^{\displaystyle \frac{E-E_F}{kT}}+1} \cong 1}
+  \formTab{Prozentualer Fehler der Boltzmann-Näherung}{F_{boltz,\%} = \displaystyle \frac{f(\Delta E)-f_{boltz}(\Delta E)}{f(\Delta E)}}
+  
+  \subsubsubsection{Ladungsträgerkonzentration in der \\Boltzmann-Näherung}
+  \formTabL{Elektronenkonzentration}{n = N_C e^{-\displaystyle \frac{E_C - E_F}{kT}}}{boltz_konz_n}
+  \formTabL{Lochkonzentration}{p = N_V e^{-\displaystyle \frac{E_F - E_V}{kT}}}{boltz_konz_p}
+  \formTabL{Effektive Zustandsdichte(a)}{N_C = 2\left(\displaystyle\frac{2\pi m_n^*kT}{h^2}\right)^{\frac{3}{2}} \sim \left(m_n^*T\right)^{\frac{3}{2}}}{zustd_boltz_a}
+  \formTabL{Effektive Zustandsdichte(b)}{N_V = 2\left(\displaystyle\frac{2\pi m_p^*kT}{h^2}\right)^{\frac{3}{2}} \sim \left(m_p^*T\right)^{\frac{3}{2}}}{zustd_boltz_b}
+  \formTab{Größengleichung zu \eqref{eq:zustd_boltz_a} und \eqref{eq:zustd_boltz_b}}{N_{C,V} = 2,50\cdot 10^{19}\left(\displaystyle\frac{m_{n,p}^*}{m_0}\right)^{\frac{3}{2}} \left(\frac{T\bracks{K}}{300}\right)^{\frac{3}{2}} \bracks{cm^{-3}}}
+  
+  \subsubsection{Massenwirkungsgesetz}
+  \formTabL{Massenwirkungsgesetz(a)}{np = N_C N_V e^{-\frac{E_C-E_F}{kT}} e^{-\frac{E_F-E_V}{kT}}}{massenwirkung_a}
+  \formTabL{Bandlücke}{E_g = E_C-E_V}{e_gap}
+  \eqref{eq:e_gap} in \eqref{eq:massenwirkung_a} (wobei $n_i$ die intrinsische Ladungsträgerdichte ist):
+  \formTabL{Massenwirkungsgesetz(b)}{np = N_C N_V e^{\frac{E_g}{kT}} = n_i^2}{massenwirkung_b}
+  Also gilt ganz allgemein (und zwar unabhängig von der Dotierung)
+  \formTabL{Massenwirkungsgesetz(c)}{np = n_i^2}{massenwirkung_c}
+  \formTab{Intrinsische Ladungsträgerdichte}{ni = \sqrt{N_C N_V} \cdot e^{-\frac{E_g}{2kT}}}
+  
+  \subsubsubsection{Umformulierungen}
+  \formTab{$E_C - E_F$}{E_C - E_F = kT \cdot ln\left(\frac{N_C}{n}\right)}
+  \formTab{$E_F - E_V$}{E_F - E_V = kT \cdot ln\left(\frac{N_V n}{n_i^2}\right)}
+  
+  \subsubsection{Fermi-Niveau}
+  \formTabL{Fermi-Niveau(a)}{E_{Fi} = \frac{EC + EV}{2} - \frac{kT}{2} ln \left(\frac{N_C}{N_V}\right)}{fermi_n_a}
+  Mit \eqref{eq:zustd_boltz_a} und \eqref{eq:zustd_boltz_b} in \eqref{eq:fermi_n_a} folgt:
+  \formTab{Fermi-Niveau(b)}{E_{fi} = \frac{EC + EV}{2} - \frac{3}{4} kT \cdot ln\left(\frac{m_n^*}{m_p^*}\right)}
+  
+  \subsubsubsection{Umformulierungen}
+  \begin{flalign}
+  |E_{Fi} - E_V| &= \frac{E_g}{2} - \frac{kT}{2} \cdot ln\left( \frac{N_C}{N_V} \right)& \\
+  \nonumber \\
+  E_C &= E_F + E_g \Rightarrow \frac{E_C + E_V}{2}& \nonumber\\
+  &= \frac{E_V + E_g + E_V}{2} = E_V + \frac{E_g}{2} \overset{Ev := 0V}{=} \frac{E_g}{2}&\\ 
+  \nonumber  \\
+  E_g &= E_C - E_V = (E_C - E_F) + (E_F - E_V)& \nonumber \\
+  &\Rightarrow E_C - E_F = E_g - (E_F - E_V)&
+  \end{flalign}
+  
+  \subsubsection{Bandbesetzung im intrinsischen Halbleiter}
+  Definiert man 
+  \begin{equation}
+   n_e = D_C(E)f(E)dE
+  \end{equation}
+  wo $n_e$ die Elektronenkonzentration pro Energieintervall beschreibt erhält man aus \eqref{eq:lad_konz_n} 
+  \begin{equation}
+    n = \int_{E_C}^{\infty} n_e dE
+  \end{equation}
+  bzw. mit $p_e = D_V(E)(1-f(E))$ aus \eqref{eq:lad_konz_p} 
+  \begin{equation}
+    p = \int_{-\infty}^{E_V} p_e dE
+  \end{equation}
+  
+  \subsubsection{Bandbesetzung im extrinsischen Halbleiter}
+  Aus der Annahme, dass alle Donatoren und Akzeptoren ionisiert seien, folgt
+  \begin{equation}
+    N_D^+ \approx N_D \qquad \qquad N_A^- \approx N_A \label{eq:extr_ion_ann}
+  \end{equation}
+  Aus der Ladungsneutralität und \eqref{eq:massenwirkung_c} folgt
+  \begin{equation}
+    n = \frac{N_D^+ - N_A^-}{2} + \sqrt{\frac{(N_D^+ - N_A^-)^2}{4}+n_i^2}
+  \end{equation}
+  
+  \subsubsubsection{Wichtige Näherung zur Bestimmung der Minoritäten}
+  Beispiel an einem n-typ Halbleiter:
+  Mit \eqref{eq:extr_ion_ann} und 
+  \begin{equation}
+    N_D >> N_A, \qquad \qquad N_D >> n_i
+  \end{equation}  
+  folgt dann:
+  \begin{equation}
+    n  \approx N_D
+  \end{equation}
+  Mit \eqref{eq:massenwirkung_c} lassen sich so die Minoritäten bestimmen
+  \begin{equation}
+    p = \frac{n_i^2}{n}
+  \end{equation}
+  
+\subsection{Ströme im Halbleiter}
+  \subsubsection{Driftstrom}
+  \defF Erfolgt die Ladungsträgerbewegung als Folge einer elektrischen Feldstärke, so spricht man im Halbleiter von einem Driftstrom.
+  \formTab{Driftstrom Elektronen}{J_{drift,n} = q\mu_n n \pmb{\varepsilon} = \sigma_n \pmb{\varepsilon} \bracks{\frac{A}{m^2}}}   
+  \formTab{Driftstrom Löcher}{J_{drift,p} = q\mu_n p \pmb{\varepsilon} = \sigma_p \pmb{\varepsilon}}
+  \formTab{Gesamtdriftstrom}{J_{drift} = J_{drift,n} + J_{drift,p} = (\sigma_n + \sigma_p) \epsF = \frac{V}{l \rho}}
+  
+  \subsubsection{Beweglichkeit}
+  \formTab{Drift-geschwindigkeit$\;n$}{v_{d,n} = -\mu_n \epsF}
+  \formTab{Drift-geschwindigkeit$\;p$}{v_{d,p} = + \mu_p \epsF}
+  
+  \subsubsection{Partikelstromdichte}
+  \formTab{Partikelstromdichte}{J_{part}(x) = -D\frac{dM}{dx} \bracks{\frac{cm^2}{s}}}
+  
+  \subsubsection{Diffustionsstromdichte}
+  \formTab{Diffusionsstromdichte(a)}{J_{diff} = q J_{part}}
+  \formTab{Diffusions-stromdichte$\;n$}{J_{diff,n} = -q J_{part} = -q\left(-D_n \frac{dn}{dx} \right) = qD_n \frac{dn}{dx}}
+  \formTab{Diffusions-stromdichte$\;p$}{J_{diff,p} = q J_{part} = q\left(-D_p \frac{dn}{dx} \right) = -qD_p \frac{dp}{dx}}
+  
+  \subsubsection{Einsteingleichung}
+  \formTab{Diffusions-konstante$\;n$}{D_n = \mu_n \frac{kT}{q}}
+  \formTab{Diffusions-konstante$\;p$}{D_p = \mu_p \frac{kT}{q}}  
+  $kT$ ist jeweils in Joule einzusetzen. Liegt der Wert von $kT$ in $eV$ vor, muss auf das normieren auf die Elementarladung verzichtet werden!
+  
+  \subsubsection{Gesamtstrom im Halbleiter}
+  \formTabL{Elektronenstromdichte}{J_n = q \mu_n n \epsF + q D_n \frac{dn}{dx} = \sigma_n \epsF + q D_n \frac{dn}{dx}}{stromdichte_n}
+  \formTabL{Löcher-stromdichte}{J_p = q \mu_p p \epsF + q D_p \frac{dp}{dx} = \sigma_p \epsF + q D_p \frac{dp}{dx}}{stromdichte_p}
+  \formTab{Gesamtstromdichte}{J_{tot} = J_n + J_p \formTnQQ =  J_{drift,n} + J_{diff,n} + J_{drift,p} + J_{diff,p}}
+  In den meisten Bauelementen kann die Driftstromdichte für Minoritäten vernachlässigt werden.
+  
+  \subsubsection{Rekombination und Generation}
+  \formTab{Injektion von Ladungsträgern}{np > n_i^2}
+  \formTab{Extraktion von Ladungsträgern}{np < n_i^2}
+  
+  \subsubsubsection{Niederinjektion}
+  \formTab{Lochkonzentration vor Injektion}{p_0 = \frac{n_i^2}{n_0} = 10^5 cm^{-3}}
+  Niederinjektion bedeutet, dass sich die Majoritätenkonzentration während dem Betreiben des Bauelements (praktisch) nicht ändert. \citeVgl{Mikro1}
+  \formTab{Näherung Minoritäten}{p \approx \Delta p}
+  \formTab{Näherung Majoritäten}{n \approx n_0}
+  \glqq PN-Übergänge, npn- und pnp Transistoren, Thyristoren, etc. betreibt man normalerweise im Bereich der Niederinjektion. \grqq \cite{Mikro1}
+  
+  \subsubsubsection{Minoritätsladungsträgerlebensdauer/ \\-diffusionslänge}
+  \formTab{Minoritätsladungsträgerlebensdauer}{\Delta p(t) = \Delta p (t_0) e^{-\displaystyle\frac{t-t_0}{\tau}}}  
+  Wobei $\tau = \frac{1}{K_1}$ den zeitlichen Abfall von p charackterisiert und Minoritätsladungsträgerlebensdauer heißt. \citeVgl{Mikro1} 
+  \begin{equation}
+  \Rightarrow \tau = \frac{\Delta p}{\frac{d \Delta p}{dt}} \Big|_{t=0}
+  \end{equation}
+  
+  \formTab{Minoritätsladungsträgerdiffusionslänge}{\Delta p(x) = \Delta p(x_0) e^{-\displaystyle \frac{x-x_0}{L}}}
+  Wobei $L = \frac{1}{K_2}$ den räumlichen Abfall der Überschusskonzentration charackterisiert und Minoritätsladungsträgerdiffusionslänge heißt. \citeVgl{Mikro1}
+  
+  \formTabL{Diffusionslänge Löcher}{L_p = \sqrt{D_p \tau_p}}{difflang_p} 
+  \formTabL{Diffusionslänge Elektronen}{L_n = \sqrt{D_n \tau_n}}{difflang_n}
+  
+  \subsubsection{Quasi-Fermi-Niveaus (QFN oder Imref)}
+  Liegt Injektion oder Extraktion vor, also gilt $np > n_i^2$ oder $np < n_i^2$, gelten die Zusammenhänge aus \eqref{eq:massenwirkung_b} nicht mehr, da hier ein gleiches Fermi-Niveau für Löcher und Elektronen vorrausgesetzt wird. Um das zu korrigieren werden für Löcher und Elektronen Quasiferminiveaus eingeführt.
+  \formTab{Elektronenkonzentration}{n = N_C e^{-\displaystyle \frac{E_C - E_{Fn}}{kT}}}
+  \formTab{Lochkonzentration}{p = N_V e^{-\displaystyle \frac{E_{Fp} - E_V}{kT}}}
+  \formTabL{Massenwirkungsgesetz(b)}{np = N_C N_V e^{\frac{E_g}{kT}} e^{\frac{E_{Fn} - E_{Fp}}{kT}} \formTnQQQ = n_i^2 e^{\displaystyle \frac{E_{Fn} - E_{Fp}}{kT}}}{massenwirkung_b_qfn}
+  Es gilt:
+  \formTab{Gleichgewicht}{np = n_i^2 \Leftrightarrow E_{Fn} = E_{Fp} = E_F}
+  \formTab{Injektion}{np > n_i^2 \Leftrightarrow E_{Fn} > E_{Fp}}
+  \formTab{Extraktion}{np < n_i^2 \Leftrightarrow E_{Fn} < E_{Fp}}
+  
+  \formTab{Elektronenstromdichte}{J_n(x) \overset{\eqref{eq:stromdichte_n},\eqref{eq:boltz_konz_n}}{=} \sigma_n(x)\frac{1}{q} \frac{dE_{Fn}}{dx}}  
+  \formTab{Löcherstromdichte}{J_p(x) \overset{\eqref{eq:stromdichte_p},\eqref{eq:boltz_konz_p}}{=} \sigma_p(x)\frac{1}{q} \frac{dE_{Fp}}{dx}}
+  
+  \subsection{Elektrostatik des PN-Übergangs}
+  \subsubsection{Poisson-Gleichung}
+  \formTabL{Poisson-Gleicunung}{\frac{d^2 \varphi(x)}{dx^2} = -\frac{\rho(x)}{\varepsilon_d}}{poisson_1}
+  Mit $\varphi(x)$ als Potential und $\rho_Q(x)$ als räumliche Ladungsdichte.
+  \formTab{Dielektrizitätskonstante}{\varepsilon_d = \varepsilon_r \varepsilon_0}
+  Mit
+  \formTab{Potentielle Energie(a)}{\varphi(x) = -\frac{1}{q} E_{pot}(x)}
+  folgt
+  \formTab{Potentielle Energie(b)}{\displaystyle\frac{1}{q} \frac{d^2 E_{pot}(x)}{dx^2} = \frac{\rho_Q (x)}{\varepsilon_d}}  
+  Mit \eqref{eq:eFeld_a} und \eqref{eq:poisson_1} folgt
+  \formTab{differentielles El. Feld}{\displaystyle\frac{d\epsF (x)}{dx} = \frac{\rho_Q (x)}{\varepsilon_d}}
+  
+  \subsubsection{Ladungsneutralität und \\elektrostatisches Helebgesetz}
+  \formTab{Verarmungsnäherung}{\rho_Q (x) = 
+	  \begin{cases}
+		  -qN_A & \text{für } -dp \leq x \ < 0 \\
+		  +qN_D & \text{für } 0 < x \leq d_n
+	  \end{cases}}
+	Wobei sich der pn-Übergang zwischen $-d_p$ und $d_n$ befindet und somit $-d_p$ und $d_n$ die Grenzen der RLZ darstellen.
+	\formTab{Flächenladungsdichte links v. pn-Übergang}{Q_L = \rho_L d_p = -qN_A d_P}
+  \formTab{Flächenladungsdichte rechts v. pn-Übergang}{Q_R = \rho_R d_n = +qN_D d_n}	
+  \formTabL{Flächenladung gesamt}{G_{F,total} = Q_L + Q_R = 0 \formTnQQQ = -qN_A d_p + q N_D d_n}{gf_total}
+  
+  \formTabL{Folgerung aus \eqref{eq:gf_total}(a)}{N_A d_p = N_D d_n}{flaechenladung_folg_1}
+  \formTab{Folgerung aus \eqref{eq:gf_total}(b)}{\displaystyle\frac{d_p}{d_n} = \frac{N_D}{N_A}}
+	
+	\subsubsection{Potential und Feldstärke}
+	\formTab{Elektrische Feldstärke(a1)}{\epsF_L (x) = -\frac{q}{\varepsilon_d} N_A (x+d_p}
+	\formTab{Elektrische Feldstärke(b2)}{\epsF_R (x) = \frac{q}{\varepsilon_d} N_D (x-d_n}
+	\formTabL{Maximale el. Feldstärke(a)}{\epsF_{max} = \epsF (x = 0) = \epsF_{L,R} (x = 0)}{eFeld_max}
+	\formTab{Elektrische Feldstärke(a2)}{\epsF_L (x) = \epsF_{max} \left( 1+\frac{x}{d_p} \right) \text{für }-d_p \leq x \leq 0}
+	\formTab{Elektrische Feldstärke(b2)}{\epsF_R (x) = \epsF_{max} \left( 1-\frac{x}{d_n} \right) \text{für }0 \leq x \leq d_n}
+	
+	\subsubsection{Diffusionsspannung und Weite der RLZ}
+	\formTabL{Weite(a)}{w = d_n + d_p}{w1}
+  \formTab{Diffusionsspannung(a)}{V_{bi} = \displaystyle\varphi_R(d_n) = 	-\frac{\epsF_{max}}{2}(d_n + d_p) = -\frac{\epsF_{max}}{2} w}
+  Mit \eqref{eq:eFeld_max} erhält man
+  \formTab{Diffusionsspannung(b)}{V_{bi} = \displaystyle\frac{qN_A}{2\varepsilon_d}d_p(d_n + d_p)}
+  
+  Mit \eqref{eq:flaechenladung_folg_1} erhält man schließlich 
+  \formTab{Teilweite $d_p$}{d_p = \displaystyle\sqrt{\frac{2\varepsilon_d N_D V_{bi}}{qN_A (N_A + N_D)}} \sim \sqrt{V_{bi}}}  	
+  \formTab{Weite(b)}{w = \displaystyle dp\left(1+\frac{N_A}{N_D}\right)}
+  \formTabL{Weite(c)}{\displaystyle w = \sqrt{\frac{2\varepsilon_d}{q} \frac{N_A + N_D}{N_A N_D}V_{bi}} \sim \sqrt{V_{bi}}}{rlz_w_c}
+  \formTab{Folgerung(a)}{w \uparrow \quad \Rightarrow \quad V_{bi} \uparrow}
+  
+  \formTab{Diffusionsspannung(c)}{\displaystyle qV_{bi} = kT\;ln\left(\frac{n_{n0}p_{p0}}{n_i^2}\right) \approx kT\;ln\left(\frac{N_A N_D}{n_i^2}\right)}
+  \formTab{Diffusionsspannung(d)}{\displaystyle V_{bi}^0 = \frac{kT}{q}ln\left( \frac{N_D N_A}{n_i^2}\right)}
+  \formTabL{Diffusionsspannung(e)}{V_{bi} = V_{bi}^0 - V}{diffspann_e}
+  Aus \eqref{eq:flaechenladung_folg_1} und \eqref{eq:w1} folgen
+  \formTab{Relative Weite $p$}{d_p = w \frac{N_D}{N_A + N_D}}
+  \formTab{Relative Weite $n$}{d_n = w \frac{N_A}{N_A + N_D}}
+  \formTab{Maximale el. Feldstärke(b)}{\left|\epsF_{max}\right| = 2\frac{V_{bi}}{w}}
+  \formTab{Flächenladungsdichte}{Q_F = \abs{Q_R} = \abs{Q_L} = qN_A d_p = qN_D d_n \formTnQQQ = q\frac{N_A N_D}{N_A + N_D}w = \sqrt{2\varepsilon_d \frac{N_A N_D}{N_A + N_D}q V_{bi}}}
+  
+  \subsection{Kennlinie des pn-Übergangs}
+  \formTab{Minoritätenkonzentration(a)}{\Delta p \big|_{d_n} = p_n - p_{n0} = p_{n0} \brac{e^{\frac{qV}{kT}}-1}}
+  \formTab{Minoritätenkonzentration(b)}{\Delta n \big|_{-d_p} = n_p - n_{p0} = p_{n0} \brac{e^{\frac{qV}{kT}}-1}}
+  
+  \formTab{Stromdichte $n$}{J_n(-d_p) = J_{n0}\left(e^{\frac{qV}{kT}}-1\right)}
+  \formTab{Stromdichte $p$}{J_p(d_n) = J_{p0}\left(e^{\frac{qV}{kT}}-1\right)}
+  
+  \formTab{Bandlücke}{\displaystyle E_g = -\frac{ln\brac{J_0(T_4)} - ln\brac{J_0(T_2)}}{\frac{1}{T_1} - \frac{1}{T_2}}}
+  
+  \formTab{Stromdichte(a)}{J = \brac{\frac{qD_n}{L_n}n_{p0} + \frac{qD_p}{L_p}p_{n0}}\brac{e^{\frac{qV}{kT}}-1}}
+  Mit $p_{n0} = \frac{n_i^2}{N_D}$ und $n_{po} = \frac{n_i^2}{N_A}$ folgt
+  \formTab{Stromdichte(b)}{\displaystyle J = qn_i^2 \brac{\frac{D_n}{L_n N_A} + \frac{D_p}{L_p N_D}}\brac{e^{\frac{qV}{kT}}-1}}  
+  Die e-Funktion wird bei negativen Spannungen sehr klein, das impliziert direkt einen sehr kleinen Stromfluss beim Sperrverhalten. Bei einer großen Bandlücke erhält man so ein sehr gutes Sperrverhalten. 
+  
+  \formTab{Sperrsättigungsstromdichte}{\displaystyle J_0 = qn_i^2 \brac{\frac{D_n}{L_n N_A} + \frac{D_p}{L_p N_D}}}
+  
+  \formTab{Stromdichte(c)}{\displaystyle J = J_0 \brac{e^{\frac{qV}{kT}}-1}}
+  \formTab{Elektronensperr-sättigungsstromdichte}{J_{no} = qn_i^2 \brac{\frac{D_n}{L_n N_A}}}
+  \formTab{Löchersperrsättigungsstromdichte}{J_{po} = qn_i^2 \brac{\frac{D_p}{L_p N_D}}}
+  
+  Bei stark unsymmetrischer Dotierung wird die Sperrsättigungsstromdichte ebenso stark unsymmetrisch und es kann vereinfacht werden. Im Fall $N_A >> N_D$ z.B:
+  \formTab{Näherung(a)}{J_0 = qn_i^2 \brac{\frac{D_p}{L_p N_D}}}
+  \formTab{Näherung(b)}{\displaystyle J = \frac{qD_p}{L_p} \frac{n_i^2}{N_D} \brac{e^{\frac{qV}{kT}}-1}}
+  
+  \subsubsection{Kapazität des pn-Übergangs}
+  \formTab{Kapazität(a)}{C = \frac{dQ}{dW}}
+  \formTab{Kapazität(b)}{C_{platt}=\varepsilon_r \varepsilon_0 \frac{A}{w} = \varepsilon_d \frac{A}{w}}
+  \formTab{Kapazität der RLZ(a)}{C_{RLZ} = A\sqrt{\frac{q\varepsilon_d}{2} \frac{N_A N_D}{N_A + N_D}} \sqrt{\frac{1}{V_{bi}^0 - V}}}
+  
+  Mit \eqref{eq:diffspann_e} folgt 
+  \formTab{Kapazität der RLZ(b)}{\displaystyle C_{RLZ} = A\frac{\varepsilon_d}{\sqrt{\frac{q\varepsilon_d}{2} \frac{N_A + N_D}{N_A N_D}V_{bi}}}} 
+  Setzt mein weiter \eqref{eq:rlz_w_c} ein erhält man schließlich
+  \formTab{Kapazität der RLZ(c)]}{\displaystyle C_{RLZ} = A\frac{\varepsilon_d}{w}}
+  
+  \formTab{Diffusionskapazität der Minoritäten}{C_{diff} = \frac{dQ_{min}}{dV} = A\frac{q^2}{kT}L_pp_{n0}e^{\frac{qV}{kT}}}
+  
+  \subsubsection{Kleinsignalleitwert des pn-Übergangs}
+  \formTab{Kleingisnalleitwert}{G_d = \frac{dI}{dV} = A\frac{dJ}{dV}}
+  \formTab{Differnetieller Leitwert}{G_d = A\frac{dJ}{dV} = A\frac{q}{kT}J}
+  
+  \subsubsection{Abweichung in der Vorwärtskennlinie}
+  \subsubsubsection{Rekombinationsströme}
+  \formTab{Rekombinationssperrsättigungsstrom}{J_{ro} = qn_i\frac{w}{2\tau_{RLZ}}}
+  \formTab{Rekombinationsstrom}{J_r = J_{ro} \brac{e^{\frac{qV}{2kT}}-1}}  
+  
+  \formTab{Totale Stromdichte(a)}{J_t = J_0 \brac{\frac{qV}{kT} -1} + J_{ro}\brac{\frac{qV}{2kT}}}
+  
+  \formTab{Verhältnis(a)}{\displaystyle \frac{J_{id}}{J_r} = \frac{J_0}{J_{ro}}\frac{qV}{2kT}}
+  Mit $\tau_{RLZ} \approx \tau$ folgt mit $L = \sqrt{D \tau}$ (siehe \eqref{eq:difflang_p}, \eqref{eq:difflang_n})
+  \formTab{Verhältnis(b)}{\displaystyle \frac{J_{id}}{J_r} = \frac{2n_i}{w} \brac{\frac{L_n}{N_A} + \frac{L_p}{N_D}}\frac{qV}{2kT}}
+  Bei 
+  \begin{equation*}
+    \frac{L_n}{N_A} >> \frac{L_p}{N_D}
+  \end{equation*}
+  gilt
+  \formTab{Näherung(a)}{\displaystyle \frac{J_{id}}{J_r} = \frac{2n_i}{w} \frac{L_n}{N_A} \frac{qV}{2kT}}
+  
+  \subsubsubsection{Idealität}
+  \formTab{Totale Stromdichte(b)}{\displaystyle J_{to}\brac{\frac{qV}{n_{id}kT}-1}}
+  \formTab{Idealität}{\displaystyle n_{id} = \frac{\frac{dV}{dlog(J_t)}}{2,3026\cdot \frac{kT}{q}}}
+  
+  \newpage
+\section{\underline{Anhänge}}
+	\subsection{Abkürzungen/Formelzeichen} \label{ch:names}
+	\renewcommand{\arraystretch}{1.5}
+	\begin{longtable} {|p{2cm}|p{3cm}|p{8.4cm}|} \hline
+	% Definition des Tabellenkopfes auf der ersten Seite
+	%Spaltenbezeichnungen
+	\textbf{Zeichen} & \textbf{Einheit} & \textbf{Bedeutung} \\
+	\hline
+	\endfirsthead % Erster Kopf zu Ende
+	% Definition des Tabellenkopfes auf den folgenden Seiten
+	\caption{Abkürzungen/Formelzeichen}\\ \hline
+	%Spaltenbezeichnungen
+	\textbf{Zeichen} & \textbf{Einheit} & \textbf{Bedeutung} \\
+	\hline
+	\endhead % Zweiter Kopf ist zu Ende
+	\multicolumn{3}{r}{Fortsetzung auf Folgeseite}\\
+	\endfoot
+	\hline
+	%\multicolumn{3}{r}{Ende} \\
+	\endlastfoot
+	
+	%a-g
+	$A$ & $m^2$ & Fläche \\ \hline
+	$a$ & $\frac{m}{s^2}$ & Beschleunigung \\ \hline
+	$b$ & $\frac{cm^2}{Vs}$ & Ladungsträgerbeweglichkeit \\ \hline
+	$d$ & $m$ & Dicke \\ \hline
+	$D_n$ & $\frac{m^2}{s}$ & Diffusionskonstante für Elektronen \\ \hline
+	$D_p$ & $\frac{m^2}{s}$ & Diffusionskonstante für Löcher \\ \hline
+	$e$ & $C$ & Elementarladung \\ \hline
+	$E$ & $\frac{N}{C} = \frac{VAs}{mAs} = \frac{V}{m}$ & Elektrische Feldstärke \\ \hline
+	$E_c$ & $eV$ & Leitungsbandkante \\ \hline
+	$E_F$ & $eV$ & Fermi-Energie \\ \hline
+	$E_g$ & $eV$ & Energie der Bandlücke \\ \hline
+	$E_v$ & $eV$ & Valenzbandkante \\ \hline
+	$f$ & $Hz$ & Frequenz \\ \hline
+	$\vec{F}$ & $N = \frac{kgm}{s^2}$ & Kraft \\ \hline
+	$G$ & $\frac{A}{V} = \frac{1}{\Omega} = S$ & Leitwert \\ \hline
+	
+	%h-n
+	$h$ & $eVs$ & Plank-Konstante\\ \hline
+	$\hbar$ & $eVs$ & Planksches Wirkungsquantum \\ \hline
+	$i$ & $A$ & Elektrischer Strom \\ \hline
+	$j$ & $\frac{A}{m2}$ & Elektrische Stromdichte \\ \hline
+	$J_n$ & $\frac{A}{m2}$ & Elektronenstromdichte \\ \hline
+	$J_p$ & $\frac{A}{m2}$ & Löcherstromdichte \\ \hline
+	$J_{diff}$ & $\frac{A}{m2}$ & Diffusionsstromdichte \\ \hline
+	$J_{part}$ & $\frac{A}{m2}$ & Partikelstromdichte \\ \hline
+	$J_to$ & $\frac{A}{m2}$ & Totale Stromdichte \\ \hline
+	$J_r$ & $\frac{A}{m2}$ & Rekombinationsstromdichte \\ \hline
+	$J_{drift}$ & $\frac{A}{m2}$ & Driftstromdichte \\ \hline
+	$l$ & $m$ & Länge \\ \hline
+	$L$ & $m$ & Minoritätsladungsträgerdiffusionslänge \\ \hline
+	$L_n$ & $m$ & Diffusionslänge Elektronen \\ \hline
+	$L_p$ & $m$ & Diffusionslänge Löcher \\ \hline
+	
+	%m-u
+	$n$ & ... & Elektronenkonzentration \\ \hline
+	$n_i$ & ... & Intrinsische Ladungsträgerdichte \\ \hline
+	$n_{id}$ & ... & Idealität einer Diode \\ \hline
+  $N_A$ & $m^{-3}$ & Akzeptorendichte \\ \hline
+  $N_D$ & $m^{-3}$ & Donatorendichte \\ \hline
+	$N_C$ & $cm^{-3}$ & Effektive Zustandsdichte der Elektronen \\ \hline
+	$N_V$ & $cm^{-3}$ & Effektive Zustandsdichte der Löcher \\ \hline
+	$p$ & ... & Lochkonzentration \\ \hline
+	$q$ & $C$ & Probeladung (in der Regel = $e$) \\ \hline
+	$\vec{r}$ & $m$ & Weg \\ \hline
+	$r$ & $\Omega$ & Differentieller Widerstand \\ \hline
+	$R$ & $\Omega$ & Widerstand \\ \hline
+	$R_F$ & $\frac{\Omega}{square}$ & Flächenwiderstand \\ \hline 
+	$U$ & $V$ & Elektrische Spannung \\ \hline
+	$U_g$ & $V$ & Gesamtspannung \\ \hline
+	 
+	%v-z
+	$v$ & $\frac{m}{s}$ & Geschwindigkeit \\ \hline
+	$v_D, v_d$ & $\frac{m}{s}$ & Driftgeschwindigkeit \\ \hline
+	$w$ & $m$ & Weite bzw. Breite  \\ \hline
+	$W$ & $Ws = J = \frac{kgm^2}{s^2}$ & Arbeit bzw. Energie \\ \hline
+	
+	%griechisch
+	$\alpha$ & $\frac{1}{^{\circ} C}$ & Temperturkoeffizient des Ohmwiderstandes \\ \hline
+	$\nu$ & $Hz$ & Hier Frequenz der Welle \\ \hline
+	$\rho$ & $\frac{V cm}{A} = \Omega  cm$ & Spezifischer Widerstand \\ \hline
+	$\rho_e$ & ... & Ladungsdichte \\ \hline
+	$\kappa$ & $\frac{1}{\Omega cm} = \frac{S}{cm}$ & Spezifische Leitfähigkeit \\ \hline
+	$\varepsilon_0$ & $\frac{As}{Vm}$ & Dielektrizitätskonstante im Vakuum \\ \hline
+	$\varphi$ & $V$ & Elektrisches Potential \\ \hline
+	$\tau$ & $s$ & Stoßzeit \\ \hline
+	$\tau$ & $s$ & Minoritätsladungsträgerlebensdauer \\ \hline
+	$\mu$ & $\frac{cm^2}{Vs}$ & Beweglichkeit \\ \hline
+	%Sonderzeichen
+	\end{longtable}
+	\renewcommand{\arraystretch}{1}
+	
+	\subsection{Wichtige Donatoren und Akzeptoren} \label{ch:don/acc}
+	\renewcommand{\arraystretch}{1.5}
+	\begin{longtable} {|p{2cm}|p{3cm}|p{8.4cm}|} \hline
+	% Definition des Tabellenkopfes auf der ersten Seite
+	%Spaltenbezeichnungen
+	\textbf{Ch. Sym.} & \textbf{Name} & \textbf{Typ} \\
+	\hline
+	\endfirsthead % Erster Kopf zu Ende
+	% Definition des Tabellenkopfes auf den folgenden Seiten
+	\caption{Wichtige Donatoren und Akzeptoren}\\ \hline
+	%Spaltenbezeichnungen
+	\textbf{Zeichen} & \textbf{Einheit} & \textbf{Bedeutung} \\
+	\hline
+	\endhead % Zweiter Kopf ist zu Ende
+	\multicolumn{3}{r}{Fortsetzung auf Folgeseite}\\
+	\endfoot
+	\hline
+	%\multicolumn{3}{r}{Ende} \\
+	\endlastfoot
+	$B$ & Bor & Akzeptor \\ \hline
+	$Al$ & Alluminium & Akzeptor \\ \hline
+	$Ga$ & Gallium & Akzeptor \\ \hline
+	$In$ & Indium & Akzeptor \\ \hline
+	$P$ & Phosphor & Donator \\ \hline
+	$As$ & Arsen & Donator \\ \hline
+	$Sb$ & Antimon & Donator \\ \hline
+	$Bi$ & Wismut & Donator \\ \hline
+	\end{longtable}
+	\renewcommand{\arraystretch}{1}
+	\newpage
+	\subsection{Effektive Massen} \label{ch:don/acc}
+	\renewcommand{\arraystretch}{1.5}
+	\begin{longtable} {|p{2cm}|p{3cm}|p{8.4cm}|} \hline
+	% Definition des Tabellenkopfes auf der ersten Seite
+	%Spaltenbezeichnungen
+	\textbf{Band} & \textbf{Wert} & \textbf{Element} \\
+	\hline
+	\endfirsthead % Erster Kopf zu Ende
+	% Definition des Tabellenkopfes auf den folgenden Seiten
+	\caption{Effektive Massen}\\ \hline
+	%Spaltenbezeichnungen
+	\textbf{Band} & \textbf{Wert} & \textbf{Element} \\
+	\hline
+	\endhead % Zweiter Kopf ist zu Ende
+	\multicolumn{3}{r}{Fortsetzung auf Folgeseite}\\
+	\endfoot
+	\hline
+	%\multicolumn{3}{r}{Ende} \\
+	\endlastfoot
+	$\frac{m_n^*}{m_0}$ & $1,08$ & Silizium \\ \hline
+	$\frac{m_n^*}{m_0}$ & $1,561$ & Germanium \\ \hline
+	$\frac{m_n^*}{m_0}$ & $1,067$ & Gallium-Arsenid \\ \hline
+	$\frac{m_p^*}{m_0}$ & $1,10$ & Silizium \\ \hline
+	$\frac{m_p^*}{m_0}$ & $1,291$ & Germanium \\ \hline
+	$\frac{m_p^*}{m_0}$ & $1,473$ & Gallium \\ \hline
+	\end{longtable}
+	\renewcommand{\arraystretch}{1}
+	
+	\subsection{Bandlücken wichtiger Materialien} \label{ch:gaps}
+	\renewcommand{\arraystretch}{1.5}
+	\begin{longtable} {|p{2cm}|p{3cm}|p{8.4cm}|} \hline
+	% Definition des Tabellenkopfes auf der ersten Seite
+	%Spaltenbezeichnungen
+	\textbf{Zeichen} & \textbf{Wert in \text{e}V} & \textbf{Material} \\
+	\hline
+	\endfirsthead % Erster Kopf zu Ende
+	% Definition des Tabellenkopfes auf den folgenden Seiten
+	\caption{Bandlücken wichtiger Materialien}\\ \hline
+	%Spaltenbezeichnungen
+	\textbf{Zeichen} & \textbf{Einheit} & \textbf{Bedeutung} \\
+	\hline
+	\endhead % Zweiter Kopf ist zu Ende
+	\multicolumn{3}{r}{Fortsetzung auf Folgeseite}\\
+	\endfoot
+	\hline
+	%\multicolumn{3}{r}{Ende} \\
+	\endlastfoot
+	$E_{g,SiO_2}$ & $9$ & Siliziumdioxid \\ \hline
+	$E_{g,C}$ & $5,47$ & Diamant \\ \hline
+	$E_{g,CdS}$ & $2,42$ & Cadmiumsulfid \\ \hline
+	$E_{g,GaP}$ & $2,26$ & Galliumphosphid \\ \hline
+	$E_{g,GaAs}$ & $1,42$ & Gallium-Arsenid \\ \hline
+	$E_{g,InP}$ & $1,35$ & Indiumphosphid \\ \hline
+	$E_{g,Si}$ & $1,12$ & Silizium \\ \hline
+	$E_{g,Ge}$ & $0,66$ & Germanium \\ \hline
+	$E_{g,InSb}$ & $0,17$ & Indiumantimonid \\ \hline
+	\end{longtable}
+	\renewcommand{\arraystretch}{1}
+	
+	\subsection{Eckdaten wichtiger Halbleiter} \label{ch:eckd}
+	\renewcommand{\arraystretch}{1.5}
+	\begin{longtable} {|p{2cm}|p{2.6cm}|p{2.6cm}|p{2.6cm}|p{2.7cm}|} \hline
+	% Definition des Tabellenkopfes auf der ersten Seite
+	%Spaltenbezeichnungen
+	\textbf{Ch. Sym.} & \textbf{$E_g$ in $\bracks{eV}$} & \textbf{$N_C$ in $\bracks{cm^{-3}}$} & \textbf{$N_V$ in $\bracks{cm^{-3}}$} & \textbf{$n_i$ in $\bracks{cm^{-3}}$} \\
+	\hline
+	\endfirsthead % Erster Kopf zu Ende
+	% Definition des Tabellenkopfes auf den folgenden Seiten
+	\caption{Eckdaten wichtiger Halbleiter}\\ \hline
+	%Spaltenbezeichnungen
+	\textbf{Ch. Sym.} & \textbf{$E_g$ in $\bracks{eV}$} & \textbf{$E_g$ in $\bracks{eV}$} & \textbf{$E_g$ in $\bracks{eV}$} & \textbf{$E_g$ in $\bracks{eV}$} \\
+	\hline
+	\endhead % Zweiter Kopf ist zu Ende
+	\multicolumn{3}{r}{Fortsetzung auf Folgeseite}\\
+	\endfoot
+	\hline
+	%\multicolumn{3}{r}{Ende} \\
+	\endlastfoot
+	Si & $1,124$ & $2,81 \cdot 10^{19}$ & $2,88 \cdot 10^{19}$ & $1,04 \cdot 10^{10}$ \\ \hline
+	Ge & $0,67$ & $1,05 \cdot 10^{19}$ & $3,92 \cdot 10^{18}$ & $1,55 \cdot 10^{13}$ \\ \hline
+	GaAs & $1,424$ & $4,33 \cdot 10^{17}$ & $8,13 \cdot 10^{18}$ & $2,04 \cdot 10^{6}$ \\ \hline
+	\end{longtable}
+	\renewcommand{\arraystretch}{1}
+	\newpage
+\subsection{Niederfeld- und Niederdotierungsbeweglichkeiten ($T = 300K$)} \label{ch:bewegl.}
+	\renewcommand{\arraystretch}{1.5}
+	\begin{longtable} {|p{2.4cm}|p{3.5cm}|p{3.5cm}|p{3.5cm}|} \hline
+	% Definition des Tabellenkopfes auf der ersten Seite
+	%Spaltenbezeichnungen
+	\textbf{$n/p$} & \textbf{Si} & \textbf{Ge} & \textbf{GaAs} \\
+	\hline
+	\endfirsthead % Erster Kopf zu Ende
+	% Definition des Tabellenkopfes auf den folgenden Seiten
+	\caption{Niederfeld- und Niederdotierungsbeweglichkeiten}\\ \hline
+	%Spaltenbezeichnungen
+	\textbf{$n/p$} & \textbf{Si} & \textbf{Ge} & \textbf{GaAs} \\
+	\hline
+	\endhead % Zweiter Kopf ist zu Ende
+	\multicolumn{3}{r}{Fortsetzung auf Folgeseite}\\
+	\endfoot
+	\hline
+	%\multicolumn{3}{r}{Ende} \\
+	\endlastfoot
+	  $\mu_n \bracks{\frac{cm^2}{Vs}}$ & $1340$ & $3900$ & $8000$ \\ \hline	
+	  $\mu_p \bracks{\frac{cm^2}{Vs}}$ & $460$ & $1900$ & $400$ \\ \hline	
+	\end{longtable}
+	\renewcommand{\arraystretch}{1}	
+	
+	\subsection{Konstanten} \label{ch:constants}
+	\renewcommand{\arraystretch}{1.5}
+	
+	\begin{longtable} {|p{0.6cm}|p{4.4cm}|p{8.4cm}|} \hline
+	% Definition des Tabellenkopfes auf der ersten Seite
+	%Spaltenbezeichnungen
+	\textbf{Ze.} & \textbf{Wert} & \textbf{Bedeutung}\\
+	\hline
+	\endfirsthead % Erster Kopf zu Ende
+	% Definition des Tabellenkopfes auf den folgenden Seiten
+	\caption{Konstanten}\\ \hline
+	%Spaltenbezeichnungen
+	\textbf{Ze.} & \textbf{Wert} & \textbf{bedeutung}\\
+	\hline
+	\endhead % Zweiter Kopf ist zu Ende
+	\multicolumn{3}{r}{Fortsetzung auf Folgeseite}\\
+	\endfoot
+	\hline
+	%\multicolumn{3}{r}{Ende} \\
+	\endlastfoot
+	
+	%a-g
+	$c$ & $2,998...\cdot 10^8 \bracks{frac{m}{s}}$ & Lichtgeschwindigkeit\\ \hline
+	$e,q$ & $1,602176...\cdot 10^{-19}\bracks{C}$ & Elementarladung\\ \hline
+	$e,q$ & $1,602176...\cdot 10^{-19}\bracks{J}$ & Elementarladung\\ \hline
+	%h-n
+	$h$ & $6,63 \cdot 10^{-34} \bracks{Js}$ & Planck-Konstante\\ \hline
+	$h$ & $4,136...\cdot 10^{-15} \bracks{eVs}$ & Planck-Konstante\\ \hline
+	$\hbar$ & $\frac{h}{2\pi}$ & Plancksches Wirkungsquantum\\ \hline
+	$k$ & $8,6173 \cdot 10^{-5} \bracks{\frac{eV}{K}}$ & Boltzmann Konstante\\ \hline
+	$kT$ & $25,85 \bracks{meV}$ & mit der Boltzmann Konstante und $T=300K$ \\ \hline
+	%m-u
+	$m_0$ & $9,11 \cdot 10^{-31} \bracks{kg}$ & Elektronenmasse\\ \hline
+	 
+	%v-z
+	
+	%griechisch
+	$\varepsilon_0$ & $8,854..\cdot 10^{-12}\bracks{\frac{As}{Vm}}$ & Dielektrizitätskonstante des Vakuuums \\ \hline
+	$\varepsilon_{Si}$ & $11,90$ & Korrekturfaktor Dielektrizitätskonstante für Silizium\\ \hline
+	%Sonderzeichen
+	\end{longtable}
+	\renewcommand{\arraystretch}{1}
+  
+  \newpage
+  \subsection{Nachwort}
+  Diese Formelsammlung wurde nahezu ausschließlich auf Basis des Mikroelektronik-I Scripts von Prof. Dr. Jürgen H. Werner erstellt. Nahezu sämtliche Formeln und Werte sind direkt dem Script entnommen und wurden nicht für diese Sammlung eigenständig hergeleitet. Für ausführlichere Beschreibungen empfehle ich sehr das eben angesprochene Script zu studieren, dass unter \cite{Mikro1} im Literaturverzeichnis zu finden ist. Es kann direkt im "Kopierlädle" der Universität Stuttgart gedruckt werden. Diese Formelsammlung ist einzige ein Hilfsmittel für mich und meine Kommilitonen und sehr wahrscheinlich nicht fehlerfrei. Sollten Fehler gefunden werden, würde ich mich sehr freuen wenn man mir das kurz in einer E-Mail (f.leuze@outlook.de) mitteilen würde, damit ich entsprechende Korrekturen vornehmen kann. 
+  
+\bibliography{lit}
+
+\end{document}
